@@ -109,12 +109,12 @@ const createBoardTemplate = () => {
     </div>
     <div class="board__tasks"></div>
   </section>`
-);
+  );
 };
 
 const createTaskTemplate = () => {
-return (
-  `<article class="card card--black">
+  return (
+    `<article class="card card--black">
     <div class="card__form">
       <div class="card__inner">
         <div class="card__control">
@@ -153,12 +153,12 @@ return (
       </div>
     </div>
   </article>`
-);
+  );
 };
 
 const createTaskEditTemplate = () => {
-return (
-  `<article class="card card--edit card--yellow card--repeat">
+  return (
+    `<article class="card card--edit card--yellow card--repeat">
     <form class="card__form" method="get">
       <div class="card__inner">
         <div class="card__color-bar">
@@ -348,17 +348,17 @@ return (
       </div>
     </form>
   </article>`
-);
+  );
 };
 
 const createLoadMoreButtonTemplate = () => {
-return (
-  `<button class="load-more" type="button">load more</button>`
-);
+  return (
+    `<button class="load-more" type="button">load more</button>`
+  );
 };
 
 const render = (container, template, place) => {
-container.insertAdjacentHTML(place, template);
+  container.insertAdjacentHTML(place, template);
 };
 
 const siteMainElement = document.querySelector(`.main`);
@@ -374,7 +374,7 @@ const taskListElement = boardElement.querySelector(`.board__tasks`);
 render(taskListElement, createTaskEditTemplate(), `beforeend`);
 
 for (let i = 0; i < TASK_COUNT; i++) {
-render(taskListElement, createTaskTemplate(), `beforeend`);
+  render(taskListElement, createTaskTemplate(), `beforeend`);
 }
 
 render(boardElement, createLoadMoreButtonTemplate(), `beforeend`);
