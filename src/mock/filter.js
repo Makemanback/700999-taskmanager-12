@@ -5,14 +5,11 @@ const taskToFilterMap = {
   overdue: (tasks) => tasks
   .filter((task) => !task.isArchive && isTaskExpired(task.dueDate)).length,
   today: (tasks) => tasks
-    .filter((task) => !task.isArchive)
-    .filter((task) => isTaskExpiringToday(task.dueDate)).length,
+    .filter((task) => !task.isArchive && isTaskExpiringToday(task.dueDate)).length,
   favorites: (tasks) => tasks
-    .filter((task) => !task.isArchive)
-    .filter((task) => task.isFavorite).length,
+    .filter((task) => !task.isArchive && task.isFavorite).length,
   repeating: (tasks) => tasks
-    .filter((task) => !task.isArchive)
-    .filter((task) => isTaskRepeating(task.repeating)).length,
+    .filter((task) => !task.isArchive && isTaskRepeating(task.repeating)).length,
   archive: (tasks) => tasks.filter((task) => task.isArchive).length,
 };
 
