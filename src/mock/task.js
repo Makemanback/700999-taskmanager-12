@@ -6,13 +6,7 @@ const DESCRIPTIONS = [
   `Пройти интенсив на соточку`,
 ];
 
-const generateDescription = () => {
-
-
-  const randomIndex = getRandomInteger(0, DESCRIPTIONS.length - 1);
-
-  return DESCRIPTIONS[randomIndex];
-};
+const generateDescription = () => DESCRIPTIONS[getRandomInteger(0, DESCRIPTIONS.length - 1)];
 
 const generateDate = () => {
   const isDate = Boolean(getRandomInteger(0, 1));
