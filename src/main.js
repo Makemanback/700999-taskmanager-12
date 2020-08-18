@@ -1,102 +1,108 @@
 import SiteMenuView from "./view/site-menu.js";
 import FilterView from "./view/site-filter.js";
-import TaskView from "./view/task.js";
-import TaskEditView from "./view/edit-task.js";
-import LoadMoreButtonView from "./view/load-button.js";
-import BoardView from "./view/site-board.js";
-import SortView from "./view/sort.js";
-import TaskListView from "./view/task-list.js";
-import NoTaskView from "./view/no-task.js";
+// import TaskView from "./view/task.js";
+// import TaskEditView from "./view/edit-task.js";
+// import LoadMoreButtonView from "./view/load-button.js";
+// import BoardView from "./view/site-board.js";
+// import SortView from "./view/sort.js";
+// import TaskListView from "./view/task-list.js";
+// import NoTaskView from "./view/no-task.js";
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
-import {render, RenderPosition} from "./utils.js";
+// import {render, RenderPosition, replace, remove} from "./utils/render.js";
+
+import BoardPresenter from "./presenter/board.js";
+import {render, RenderPosition} from "./utils/render.js";
 
 const Task = {
   COUNT: 22,
   COUNT_PER_STEP: 8
 };
+
 const tasks = new Array(Task.COUNT).fill(``).map(generateTask);
 const filters = generateFilter(tasks);
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const renderTask = (taskListElement, task) => {
-  const taskComponent = new TaskView(task);
-  const taskEditComponent = new TaskEditView(task);
+// const renderTask = (taskListElement, task) => {
+//   const taskComponent = new TaskView(task);
+//   const taskEditComponent = new TaskEditView(task);
 
-  const replaceCardToForm = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
-  };
+//   const replaceCardToForm = () => {
+//     replace(taskEditComponent, taskComponent);
+//   };
 
-  const replaceFormToCard = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-  };
+//   const replaceFormToCard = () => {
+//     replace(taskComponent, taskEditComponent);
+//   };
 
-  const onEscKeyDown = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      replaceFormToCard();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    }
-  };
+//   const onEscKeyDown = (evt) => {
+//     if (evt.key === `Escape` || evt.key === `Esc`) {
+//       evt.preventDefault();
+//       replaceFormToCard();
+//       document.removeEventListener(`keydown`, onEscKeyDown);
+//     }
+//   };
 
-  taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
-    replaceCardToForm();
-    document.addEventListener(`keydown`, onEscKeyDown);
-  });
+//   taskComponent.setEditClickHandler(() => {
+//     replaceCardToForm();
+//     document.addEventListener(`keydown`, onEscKeyDown);
+//   });
 
-  taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
-    replaceFormToCard();
-    document.removeEventListener(`keydown`, onEscKeyDown);
-  });
+//   taskEditComponent.setFormSubmitHandler(() => {
+//     evt.preventDefault();
+//     replaceFormToCard();
+//     document.removeEventListener(`keydown`, onEscKeyDown);
+//   });
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
-};
+//   render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
+// };
 
-const renderBoard = (boardContainer, boardTasks) => {
-  const boardComponent = new BoardView();
-  const taskListComponent = new TaskListView();
+// const renderBoard = (boardContainer, boardTasks) => {
+//   const boardComponent = new BoardView();
+//   const taskListComponent = new TaskListView();
 
-  render(boardContainer, boardComponent.getElement(), RenderPosition.BEFOREEND);
-  render(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
+//   render(boardContainer, boardComponent, RenderPosition.BEFOREEND);
+//   render(boardComponent, taskListComponent, RenderPosition.BEFOREEND);
 
-  if (boardTasks.every((task) => task.isArchive)) {
-    render(boardComponent.getElement(), new NoTaskView().getElement(), RenderPosition.AFTERBEGIN);
-    return;
-  }
+//   if (boardTasks.every((task) => task.isArchive)) {
+//     render(boardComponent, new NoTaskView(), RenderPosition.AFTERBEGIN);
+//     return;
+//   }
 
-  render(boardComponent.getElement(), new SortView().getElement(), RenderPosition.AFTERBEGIN);
+//   render(boardComponent, new SortView(), RenderPosition.AFTERBEGIN);
 
-  boardTasks
-    .slice(0, Math.min(tasks.length, Task.COUNT_PER_STEP))
-    .forEach((boardTask) => renderTask(taskListComponent.getElement(), boardTask));
+//   boardTasks
+//     .slice(0, Math.min(tasks.length, Task.COUNT_PER_STEP))
+//     .forEach((boardTask) => renderTask(taskListComponent, boardTask));
 
-  if (boardTasks.length > Task.COUNT_PER_STEP) {
-    let renderedTaskCount = Task.COUNT_PER_STEP;
+//   if (boardTasks.length > Task.COUNT_PER_STEP) {
+//     let renderedTaskCount = Task.COUNT_PER_STEP;
 
-    const loadMoreButtonComponent = new LoadMoreButtonView();
+//     const loadMoreButtonComponent = new LoadMoreButtonView();
 
-    render(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+//     render(boardComponent, loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    loadMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
-      evt.preventDefault();
-      boardTasks
-        .slice(renderedTaskCount, renderedTaskCount + Task.COUNT_PER_STEP)
-        .forEach((boardTask) => renderTask(taskListComponent.getElement(), boardTask));
+//     loadMoreButtonComponent.setClickHandler(() => {
+//       boardTasks
+//         .slice(renderedTaskCount, renderedTaskCount + Task.COUNT_PER_STEP)
+//         .forEach((boardTask) => renderTask(taskListComponent, boardTask));
 
-      renderedTaskCount += Task.COUNT_PER_STEP;
+//       renderedTaskCount += Task.COUNT_PER_STEP;
 
-      if (renderedTaskCount >= boardTasks.length) {
-        loadMoreButtonComponent.getElement().remove();
-        loadMoreButtonComponent.removeElement();
-      }
-    });
-  }
-};
+//       if (renderedTaskCount >= boardTasks.length) {
+//         remove(loadMoreButtonComponent);
+//       }
+//     });
+//   }
+// };
 
-render(siteHeaderElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
-render(siteMainElement, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
+const boardPresenter = new BoardPresenter(siteMainElement);
 
-renderBoard(siteMainElement, tasks);
+
+render(siteHeaderElement, new SiteMenuView(), RenderPosition.BEFOREEND);
+render(siteMainElement, new FilterView(filters), RenderPosition.BEFOREEND);
+
+// renderBoard(siteMainElement, tasks);
+boardPresenter.init(tasks);
