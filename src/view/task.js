@@ -4,7 +4,7 @@ import {isTaskExpired, isTaskRepeating, formatTaskDueDate} from "../utils/task.j
 const createTaskTemplate = (task) => {
   const {color, description, dueDate, repeating, isArchive, isFavorite} = task;
 
-  const date = formatTaskDueDate(dueDate)
+  const date = formatTaskDueDate(dueDate);
 
   const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`

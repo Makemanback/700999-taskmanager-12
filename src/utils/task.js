@@ -37,7 +37,7 @@ export const formatTaskDueDate = (dueDate) => {
   }
 
   return moment(dueDate).format(`D MMMM`);
-}
+};
 
 const getWeightForNullDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {

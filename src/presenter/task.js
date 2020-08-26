@@ -44,7 +44,7 @@ export default class Task {
     }
 
     if (this._mode === Mode.DEFAULT) {
-    replace(this._taskComponent, prevTaskComponent);
+      replace(this._taskComponent, prevTaskComponent);
     }
 
     if (this._mode === Mode.EDITING) {
@@ -93,25 +93,25 @@ export default class Task {
 
   _handleFavoriteClick() {
     this._changeData(
-      Object.assign(
-        {},
-        this._task,
-        {
-          isFavorite: !this._task.isFavorite
-        }
-      )
+        Object.assign(
+            {},
+            this._task,
+            {
+              isFavorite: !this._task.isFavorite
+            }
+        )
     );
   }
 
   _handleArchiveClick() {
     this._changeData(
-      Object.assign(
-        {},
-        this._task,
-        {
-          isArchive: !this._task.isArchive
-        }
-      )
+        Object.assign(
+            {},
+            this._task,
+            {
+              isArchive: !this._task.isArchive
+            }
+        )
     );
   }
 
