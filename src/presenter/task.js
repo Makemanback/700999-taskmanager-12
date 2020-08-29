@@ -16,7 +16,6 @@ export default class Task {
     this._taskComponent = null;
     this._taskEditComponent = null;
     this._mode = Mode.DEFAULT;
-
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleArchiveClick = this._handleArchiveClick.bind(this);
