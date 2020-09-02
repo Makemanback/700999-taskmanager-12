@@ -64,7 +64,7 @@ export default class Board {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-        this._tasksModel.updateTask(updateType, update);
+      this._tasksModel.updateTask(updateType, update);
       break;
     case UserAction.ADD_TASK:
       this._tasksModel.addTask(updateType, update);
@@ -80,7 +80,7 @@ export default class Board {
       case UpdateType.PATCH:
         this._taskPresenter[data.id].init(data);
         break;
-      case UpdateType.MINOR:
+        case UpdateType.MINOR:
         this._clearBoard();
         this._renderBoard();
         break;
@@ -150,27 +150,6 @@ export default class Board {
     render(this._boardComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTaskList() {
-    Object
-    .values(this._taskPresenter)
-    .forEach((presenter) => presenter.destroy());
-    this._taskPresenter = {};
-
-    this._renderedTaskCount = TASK_COUNT_PER_STEP;
-  }
-
-
-  _renderTaskList() {
-    const taskCount = this._getTasks().length;
-    const tasks = this._getTasks().slice(0, Math.min(taskCount, TASK_COUNT_PER_STEP));
-
-    this._renderTasks(tasks);
-
-    if (taskCount > TASK_COUNT_PER_STEP) {
-      this._renderLoadMoreButton();
-    }
-  }
-
   _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const taskCount = this._getTasks().length;
 
@@ -186,9 +165,6 @@ export default class Board {
     if (resetRenderedTaskCount) {
       this._renderedTaskCount = TASK_COUNT_PER_STEP;
     } else {
-      // На случай, если перерисовка доски вызвана
-      // уменьшением количества задач (например, удаление или перенос в архив)
-      // нужно скорректировать число показанных задач
       this._renderedTaskCount = Math.min(taskCount, this._renderedTaskCount);
     }
 
