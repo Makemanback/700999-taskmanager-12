@@ -4,16 +4,20 @@ import TaskListView from "../view/task-list.js";
 import NoTaskView from "../view/no-task.js";
 import LoadMoreButtonView from "../view/load-button.js";
 import {sortTaskUp, sortTaskDown} from "../utils/task.js";
-
-import {SortType, UpdateType, UserAction} from "../const.js";
+import {SortType, UpdateType, UserAction, FilterType} from "../const.js";
 import {render, RenderPosition, remove} from "../utils/render.js";
 import TaskPresenter from "./task.js";
+import {filter} from "../utils/filters.js";
+
+import TaskNewPresenter from "./task-new.js";
+
 
 const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
-  constructor(boardContainer, tasksModel) {
+  constructor(boardContainer, tasksModel, filterModel) {
     this._tasksModel = tasksModel;
+    this._filterModel = filterModel;
     this._boardContainer = boardContainer;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._currenSortType = SortType.DEFAULT;
@@ -36,6 +40,9 @@ export default class Board {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._tasksModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
+    this._taskNewPresenter = new TaskNewPresenter(this._taskListComponent, this._handleViewAction);
   }
 
   init() {
@@ -45,17 +52,29 @@ export default class Board {
     this._renderBoard();
   }
 
+  createTask() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    this._taskNewPresenter.init();
+  }
+
   _getTasks() {
+    const filterType = this._filterModel.getFilter();
+    const tasks = this._tasksModel.getTasks();
+    const filtredTasks = filter[filterType](tasks);
+
     switch (this._currentSortType) {
       case SortType.DATE_UP:
-        return this._tasksModel.getTasks().slice().sort(sortTaskUp);
+        return filtredTasks.sort(sortTaskUp);
       case SortType.DATE_DOWN:
-        return this._tasksModel.getTasks().slice().sort(sortTaskDown);
+        return filtredTasks.sort(sortTaskDown);
     }
-    return this._tasksModel.getTasks();
+    return filtredTasks;
   }
 
   _handleModeChange() {
+    this._taskNewPresenter.destroy();
+
     Object
       .values(this._taskPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -64,14 +83,14 @@ export default class Board {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_TASK:
-      this._tasksModel.updateTask(updateType, update);
-      break;
-    case UserAction.ADD_TASK:
-      this._tasksModel.addTask(updateType, update);
-      break;
-    case UserAction.DELETE_TASK:
-      this._tasksModel.deleteTask(updateType, update);
-      break;
+        this._tasksModel.updateTask(updateType, update);
+        break;
+      case UserAction.ADD_TASK:
+        this._tasksModel.addTask(updateType, update);
+        break;
+      case UserAction.DELETE_TASK:
+        this._tasksModel.deleteTask(updateType, update);
+        break;
     }
   }
 
@@ -80,7 +99,7 @@ export default class Board {
       case UpdateType.PATCH:
         this._taskPresenter[data.id].init(data);
         break;
-        case UpdateType.MINOR:
+      case UpdateType.MINOR:
         this._clearBoard();
         this._renderBoard();
         break;
@@ -153,6 +172,7 @@ export default class Board {
   _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const taskCount = this._getTasks().length;
 
+    this._taskNewPresenter.destroy();
     Object
       .values(this._taskPresenter)
       .forEach((presenter) => presenter.destroy());

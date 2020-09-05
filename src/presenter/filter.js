@@ -51,7 +51,6 @@ export default class Filter {
 
   _getFilters() {
     const tasks = this._tasksModel.getTasks();
-
     return [
       {
         type: FilterType.ALL,
