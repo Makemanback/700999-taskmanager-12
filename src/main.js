@@ -12,7 +12,7 @@ import Api from "./api.js";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-const AUTHORIZATION = `Basic hS2sd3dfSwcl1sa2j`;
+const AUTHORIZATION = `Basic hS2sd3dfsdfSwcl1sa2j`;
 const END_POINT = `https://12.ecmascript.pages.academy/task-manager`;
 const api = new Api(END_POINT, AUTHORIZATION);
 
