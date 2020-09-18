@@ -8,7 +8,7 @@ import {render, RenderPosition, remove} from "./utils/render.js";
 
 import FilterPresenter from "./presenter/filter.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";
-import Api from "./api.js";
+import Api from "./api/index.js";
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
@@ -68,4 +68,15 @@ api.getTasks()
   tasksModel.setTasks(UpdateType.INIT, []);
   render(siteHeaderElement, siteMenuComponent, RenderPosition.BEFOREEND);
   siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+});
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      // Действие, в случае успешной регистрации ServiceWorker
+      console.log(`ServiceWorker available`); // eslint-disable-line
+    }).catch(() => {
+      // Действие, в случае ошибки при регистрации ServiceWorker
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
+    });
 });
